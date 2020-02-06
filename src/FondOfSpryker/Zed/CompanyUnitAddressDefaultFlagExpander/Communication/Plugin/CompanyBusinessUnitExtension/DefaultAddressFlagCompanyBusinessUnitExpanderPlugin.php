@@ -21,6 +21,11 @@ class DefaultAddressFlagCompanyBusinessUnitExpanderPlugin extends AbstractPlugin
     public function expand(CompanyBusinessUnitTransfer $companyBusinessUnitTransfer): CompanyBusinessUnitTransfer
     {
         $idDefaultBillingAddress = $companyBusinessUnitTransfer->getDefaultBillingAddress();
+
+        if ($idDefaultBillingAddress === null) {
+            return $companyBusinessUnitTransfer;
+        }
+
         $companyUnitAddressCollectionTransfer = $companyBusinessUnitTransfer->getAddressCollection();
 
         if ($companyUnitAddressCollectionTransfer === null) {
