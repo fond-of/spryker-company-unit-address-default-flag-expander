@@ -49,7 +49,6 @@ class DefaultAddressFlagCompanyBusinessUnitExpanderPlugin extends AbstractPlugin
         CompanyUnitAddressTransfer $companyUnitAddressTransfer,
         int $idDefaultBillingAddress
     ): CompanyUnitAddressTransfer {
-
         if ($companyUnitAddressTransfer->getIdCompanyUnitAddress() === $idDefaultBillingAddress) {
             return $companyUnitAddressTransfer->setIsDefaultBilling(true)
                 ->setIsDefaultShipping(true);
