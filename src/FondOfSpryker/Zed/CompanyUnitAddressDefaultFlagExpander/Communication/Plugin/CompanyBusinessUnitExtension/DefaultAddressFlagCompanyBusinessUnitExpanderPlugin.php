@@ -21,8 +21,9 @@ class DefaultAddressFlagCompanyBusinessUnitExpanderPlugin extends AbstractPlugin
     public function expand(CompanyBusinessUnitTransfer $companyBusinessUnitTransfer): CompanyBusinessUnitTransfer
     {
         $idDefaultBillingAddress = $companyBusinessUnitTransfer->getDefaultBillingAddress();
+        $idDefaultShipingAddress = $companyBusinessUnitTransfer->getDefaultShippingAddress();
 
-        if ($idDefaultBillingAddress === null) {
+        if ($idDefaultBillingAddress === null && $idDefaultShipingAddress === null) {
             return $companyBusinessUnitTransfer;
         }
 
@@ -33,7 +34,11 @@ class DefaultAddressFlagCompanyBusinessUnitExpanderPlugin extends AbstractPlugin
         }
 
         foreach ($companyUnitAddressCollectionTransfer->getCompanyUnitAddresses() as $companyUnitAddressTransfer) {
-            $this->setAddressBoolValue($companyUnitAddressTransfer, $idDefaultBillingAddress);
+            $this->setAddressBoolValue(
+                $companyUnitAddressTransfer,
+                $idDefaultBillingAddress,
+                $idDefaultShipingAddress
+            );
         }
 
         return $companyBusinessUnitTransfer;
@@ -42,19 +47,27 @@ class DefaultAddressFlagCompanyBusinessUnitExpanderPlugin extends AbstractPlugin
     /**
      * @param \Generated\Shared\Transfer\CompanyUnitAddressTransfer $companyUnitAddressTransfer
      * @param int $idDefaultBillingAddress
-     *
+     * @param int $idDefaultShippingAddress
      * @return \Generated\Shared\Transfer\CompanyUnitAddressTransfer
      */
     protected function setAddressBoolValue(
         CompanyUnitAddressTransfer $companyUnitAddressTransfer,
-        int $idDefaultBillingAddress
+        int $idDefaultBillingAddress,
+        int $idDefaultShippingAddress
     ): CompanyUnitAddressTransfer {
+
+        $companyUnitAddressTransfer
+            ->setIsDefaultBilling(false)
+            ->setIsDefaultShipping(false);
+
         if ($companyUnitAddressTransfer->getIdCompanyUnitAddress() === $idDefaultBillingAddress) {
-            return $companyUnitAddressTransfer->setIsDefaultBilling(true)
-                ->setIsDefaultShipping(true);
+            $companyUnitAddressTransfer->setIsDefaultBilling(true);
         }
 
-        return $companyUnitAddressTransfer->setIsDefaultBilling(false)
-            ->setIsDefaultShipping(false);
+        if ($companyUnitAddressTransfer->getIdCompanyUnitAddress() === $idDefaultShippingAddress) {
+            $companyUnitAddressTransfer->setIsDefaultShipping(true);
+        }
+
+        return $companyUnitAddressTransfer;
     }
 }
