@@ -46,25 +46,27 @@ class DefaultAddressFlagCompanyBusinessUnitExpanderPlugin extends AbstractPlugin
 
     /**
      * @param \Generated\Shared\Transfer\CompanyUnitAddressTransfer $companyUnitAddressTransfer
-     * @param int $idDefaultBillingAddress
-     * @param int $idDefaultShippingAddress
+     * @param int|null $idDefaultBillingAddress
+     * @param int|null $idDefaultShippingAddress
      * @return \Generated\Shared\Transfer\CompanyUnitAddressTransfer
      */
     protected function setAddressBoolValue(
         CompanyUnitAddressTransfer $companyUnitAddressTransfer,
-        int $idDefaultBillingAddress,
-        int $idDefaultShippingAddress
+        ?int $idDefaultBillingAddress,
+        ?int $idDefaultShippingAddress
     ): CompanyUnitAddressTransfer {
 
         $companyUnitAddressTransfer
             ->setIsDefaultBilling(false)
             ->setIsDefaultShipping(false);
 
-        if ($companyUnitAddressTransfer->getIdCompanyUnitAddress() === $idDefaultBillingAddress) {
+        if ($companyUnitAddressTransfer->getIdCompanyUnitAddress() != null
+            && $companyUnitAddressTransfer->getIdCompanyUnitAddress() === $idDefaultBillingAddress) {
             $companyUnitAddressTransfer->setIsDefaultBilling(true);
         }
 
-        if ($companyUnitAddressTransfer->getIdCompanyUnitAddress() === $idDefaultShippingAddress) {
+        if ($companyUnitAddressTransfer->getIdCompanyUnitAddress() != null
+            && $companyUnitAddressTransfer->getIdCompanyUnitAddress() === $idDefaultShippingAddress) {
             $companyUnitAddressTransfer->setIsDefaultShipping(true);
         }
 
